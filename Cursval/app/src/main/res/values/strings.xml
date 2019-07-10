@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Курсы валют</string>
+    <string name="select_valutes">Выберите валюту</string>
+    <string name="action_settings">Настройки</string>
+    <string name="valute_no_select">Валюта не выбрана</string>
+    <string name="network_not_avail">Сеть не доступна</string>
+    <string name="valutes_download">Загрузка списка валют...</string>
+    <string name="select_dates">Выберите интервал дат:</string>
+    <string name="begin_date">Начало:</string>
+    <string name="end_date">Конец:</string>
+    <string name="load_valutes_fail">Не удалось загрузить список валют</string>
+    <string name="get">Получить</string>
+    <string name="load_сurses_fail">Не удалось получить курсы валют</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="dinamic_curs">Динамика курса </string>
+    <string name="valuta_name">Имя валюты</string>
+    <string name="parse_error">Ошибка обработки полученных данных</string>
+    <string name="dates_error">Некорректно введены даты</string>
+    <string name="repeat">Повторить попытку?</string>
+    <string name="close_app">Закрыть приложение</string>
+    <string name="data_not_exists">Нет данных</string>
+    <string name="as_list">Списком</string>
+    <string name="as_diagram">Диаграмма</string>
+    <string name="as_table">Таблицей</string>
+    <string name="title_activity_graph_result">Диаграмма</string>
+    <string name="title_activity_table_result">Таблица</string>
+    <string name="ok">Ok</string>
+    <string name="dates">Даты</string>
+    <string name="curses">Курс(руб)</string>
+
+</resources>

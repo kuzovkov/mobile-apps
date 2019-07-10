@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="kuzovkov.cursval.ResultActivity">
+
+
+
+    <item
+        android:id="@+id/as_diagram"
+        android:title="@string/as_diagram"
+        android:background="@color/grey1"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+    />
+
+    <item
+        android:id="@+id/as_table"
+        android:title="@string/as_table"
+        android:background="@color/grey1"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
+
+</menu>

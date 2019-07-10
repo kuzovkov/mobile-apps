@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Анкета</string>
+    <string name="action_settings">Настройки</string>
+    <string name="fill_form">Пожалуйста, заполните  анкету:</string>
+    <string name="name">Имя:</string>
+    <string name="ph_name">Ваше имя</string>
+    <string name="lastname">Фамилия:</string>
+    <string name="ph_lastname">Ваша фамилия</string>
+    <string name="email">Email:</string>
+    <string name="ph_email">Ваш email</string>
+    <string name="sex">Пол:</string>
+    <string name="male">Мужской</string>
+    <string name="female">Женский</string>
+    <string name="birthday">Дата рождения:</string>
+    <string name="ph_date">dd(./)mm(./)yyyy</string>
+    <string name="ready">Готово</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="registered_male">Зарегистрирован:</string>
+    <string name="registered_female">Зарегистрирована:</string>
+    <string name="not_valid_name">Некорректное имя</string>
+    <string name="not_valid_lastname">Некорректная фамилия</string>
+    <string name="not_valid_email">Некорректный email</string>
+    <string name="not_valid_date">Некорректная дата</string>
+    <string name="clear">Очистить</string>
+    <string name="save">Сохранить</string>
+    <string name="nothing_save">Нет сохраненных данных</string>
+    <string name="clear_ok">Данные удалены</string>
+    <string name="save_ok">Данные сохранены</string>
+    <string name="make_photo">Сделать снимок</string>
+    <string name="cancel_photo">Фото - Отмена</string>
+    <string name="fail_photo">Фото - ошибка</string>
+    <string name="cancel_video">Видео - Отмена</string>
+    <string name="fail_video">Видео - ошибка</string>
+    <string name="server_send_ok">Данные отправлены на сервер</string>
+    <string name="server_send_fail">Ошибка отправки данных на сервер</string>
+    <string name="network_fail">Сеть недоступна</string>
+    <string name="view_on_site">Посмотреть на сайте</string>
+    <string name="title_activity_list_web">Список</string>
+    <string name="load">Load...</string>
+    <string name="exc_rate">Курс валюты</string>
+    <string name="title_activity_exc_rate">Курс валюты</string>
+
+</resources>
