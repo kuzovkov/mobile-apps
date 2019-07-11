@@ -17,7 +17,7 @@ public class Helper {
 
     /*паттерн для проверки email*/
     public static final Pattern emailPattern = Pattern.compile
-            ("[a-zA-Z]{1}[a-zA-Z\\d\\u002E\\u005F]+@([a-zA-Z]+\\u002E){1,2}((net)|(com)|(org)|(ru))");
+            ("[a-zA-Z]{1}[a-zA-Z\\d\\u002E\\u005F]+@([a-zA-Z0-9]+\\u002E){1,2}((net)|(com)|(org)|(ru))");
 
     /*паттерн для проверки имени и фамилии*/
     public static final Pattern namePattern = Pattern.compile

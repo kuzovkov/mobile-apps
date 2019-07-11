@@ -29,6 +29,8 @@
     <string name="nothing_save">Нет сохраненных данных</string>
     <string name="clear_ok">Данные удалены</string>
     <string name="save_ok">Данные сохранены</string>
+    <string name="save_ok_local">Данные сохранены локально</string>
+    <string name="save_ok_server">Данные сохранены на сервер</string>
     <string name="make_photo">Сделать снимок</string>
     <string name="cancel_photo">Фото - Отмена</string>
     <string name="fail_photo">Фото - ошибка</string>

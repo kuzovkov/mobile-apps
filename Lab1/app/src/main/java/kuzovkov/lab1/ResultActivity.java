@@ -100,7 +100,7 @@ public class ResultActivity extends ActionBarActivity {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
             fos.write(StringArray2String(this.data).getBytes());
             fos.close();
-            showMessage(getApplicationContext(),getResources().getString(R.string.save_ok));
+            showMessage(getApplicationContext(),getResources().getString(R.string.save_ok_local));
             saveIntoServer();
         }catch(IOException e){
             showMessage(getApplicationContext(),e.toString());
@@ -194,8 +194,12 @@ public class ResultActivity extends ActionBarActivity {
     private class netTask extends  MyHttp{
         @Override
         protected void onPostExecute(String result){
-            if(result != null )
-                showMessage(getApplicationContext(), result);
+            if(result != null ) {
+                if (result.equals("Command execute success"))
+                    showMessage(getApplicationContext(), getResources().getString(R.string.save_ok_server));
+                else
+                    showMessage(getApplicationContext(), getResources().getString(R.string.server_send_fail));
+            }
         }
     }
 
