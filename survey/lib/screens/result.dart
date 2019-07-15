@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:survey/models/user.dart';
 
 class ResultScreen extends StatelessWidget {
   static const String routeName = "/result";
   static const String API_URL = "http://kuzovkov12.ru/api/api.php";
-  static var sexName = ['Male', 'Female'];
 
   void _saveDataOnServer(context) async {
     List<String> data = [SurveyFormWidget.name, SurveyFormWidget.lastName, SurveyFormWidget.email, sexName[SurveyFormWidget.sex.index], SurveyFormWidget.birthdayText, (DateTime.now()).toString()];
@@ -58,14 +58,12 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    Text name = Text("Name: ${SurveyFormWidget.name}");
-    Text lastName = Text("Lastname: ${SurveyFormWidget.lastName}");
-    Text email = Text("Email: ${SurveyFormWidget.email}");
-    Text sex = Text("Sex: ${sexName[SurveyFormWidget.sex.index]}");
-    Text birthday = Text("Birthday: not defined");
-    if (SurveyFormWidget.birthday != null)
-      birthday = Text("Birthday:  ${SurveyFormWidget.birthday.year}-${SurveyFormWidget.birthday.month}-${SurveyFormWidget.birthday.day}");
+    if (SurveyFormWidget.name.length == 0 || SurveyFormWidget.lastName.length == 0 || SurveyFormWidget.email.length == 0)
+      return SurveyScreen();
+
     Image image = Image.file(File(SurveyFormWidget.imagePath));
+    User user = User(SurveyFormWidget.name, SurveyFormWidget.lastName, SurveyFormWidget.email, SurveyFormWidget.sex, SurveyFormWidget.birthday, DateTime.now(), image);
+
 
     RaisedButton saveButton = RaisedButton(
         child: new Text("Save To Server"),
@@ -83,7 +81,7 @@ class ResultScreen extends StatelessWidget {
     Container container = new Container(
         padding: const EdgeInsets.all(16.0),
         child: new Column(
-            children: [name, lastName, email, sex, birthday, image, saveButton, deleteButton])
+            children: [CustomUserItem(user), saveButton, deleteButton])
 
     );
 

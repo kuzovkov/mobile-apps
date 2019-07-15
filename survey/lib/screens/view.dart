@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:survey/screens/menu.dart';
+import 'package:survey/models/user.dart';
 
 class ViewScreen extends StatelessWidget {
   static const String routeName = "/view";
@@ -27,28 +28,6 @@ class UserListWidget extends StatefulWidget {
   _UserListWidgetState createState() => _UserListWidgetState();
 }
 
-
-class User extends Object{
-  String name;
-  String lastName;
-  String email;
-  String sex;
-  String birthday;
-  String createdAt;
-  Uint8List photo;
-
-  User(@required name, @required lastName, @required email, @required sex, @required birthday, @required  createdAt, photo){
-    this.name = name;
-    this.lastName = lastName;
-    this.email = email;
-    this.sex = sex;
-    this.birthday = birthday;
-    this.createdAt = createdAt;
-    if (photo != null)
-      this.photo = base64.decode(photo);
-  }
-
-}
 
 class _UserListWidgetState extends State<UserListWidget>{
   List<User> _users = [];
@@ -79,7 +58,7 @@ class _UserListWidgetState extends State<UserListWidget>{
           padding: const EdgeInsets.all(16.0),
           itemCount: (_users == null)? 0 : _users.length,
           itemBuilder: /*1*/ (context, i) {
-            return _buildRow(_users[i]);
+            return CustomUserItem(_users[i]);
           });
     }else{
       return Container(
@@ -95,28 +74,6 @@ class _UserListWidgetState extends State<UserListWidget>{
           )]
         )
       ),);
-    }
-  }
-
-  Widget _buildRow(User user) {
-    if (user.photo == null){
-      return ListTile(
-        title: Text(
-            [user.name, user.lastName, user.email, user.sex, user.birthday, user.createdAt].join("\n")
-        )
-      );
-    }else{
-      return ListTile(
-      title: Text(
-          [user.name, user.lastName, user.email, user.sex, user.birthday, user.createdAt].join("\n")
-      ),
-      trailing: Image.memory(
-            user.photo,
-            scale: 1.0,
-            width: 100.0,
-          height: 100.0,
-        ),
-      );
     }
   }
 

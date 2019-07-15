@@ -4,9 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:survey/screens/photo.dart';
 import 'package:survey/screens/result.dart';
 import 'package:survey/screens/menu.dart';
+import 'package:survey/models/user.dart';
 
-
-enum Sex { male, female }
 
 class SurveyScreen extends StatelessWidget {
   static const String routeName = "/survey";
@@ -48,7 +47,7 @@ class _SurveyFormWidgetState extends State<SurveyFormWidget>{
     if (picked != null)
       setState(() {
         SurveyFormWidget.birthday = picked;
-        SurveyFormWidget.birthdayText = "Birthday:  ${SurveyFormWidget.birthday.year}-${SurveyFormWidget.birthday.month}-${SurveyFormWidget.birthday.day}";
+        SurveyFormWidget.birthdayText = "Birthday:  ${User.datetime2string(SurveyFormWidget.birthday)}";
       });
   }
 
