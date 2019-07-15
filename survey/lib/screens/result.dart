@@ -62,7 +62,9 @@ class ResultScreen extends StatelessWidget {
     Text lastName = Text("Lastname: ${SurveyFormWidget.lastName}");
     Text email = Text("Email: ${SurveyFormWidget.email}");
     Text sex = Text("Sex: ${sexName[SurveyFormWidget.sex.index]}");
-    Text birthday = Text("Birthday:  ${SurveyFormWidget.birthday.year}-${SurveyFormWidget.birthday.month}-${SurveyFormWidget.birthday.day}");
+    Text birthday = Text("Birthday: not defined");
+    if (SurveyFormWidget.birthday != null)
+      birthday = Text("Birthday:  ${SurveyFormWidget.birthday.year}-${SurveyFormWidget.birthday.month}-${SurveyFormWidget.birthday.day}");
     Image image = Image.file(File(SurveyFormWidget.imagePath));
 
     RaisedButton saveButton = RaisedButton(

@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:survey/screens/photo.dart';
 import 'package:survey/screens/result.dart';
+import 'package:survey/screens/menu.dart';
 
 
 enum Sex { male, female }
 
 class SurveyScreen extends StatelessWidget {
   static const String routeName = "/survey";
-  static const String _title = "Survey";
+  static const String _title = "Survey form";
 
   @override
    Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(title: const Text(_title), backgroundColor: Color.fromRGBO(100, 100, 100, 0.5)),
       body: new SurveyFormWidget()
       );
   }
@@ -166,7 +166,15 @@ class _SurveyFormWidgetState extends State<SurveyFormWidget>{
     );
 
     _fillForm();
-    return listview;
+
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text(SurveyScreen._title),
+          backgroundColor: Color.fromRGBO(100, 100, 100, 0.5),
+        ),
+        body: listview,
+        // Set the nav drawer
+        drawer: Menu.getNavDrawer(context, this));
   }
 
 }
