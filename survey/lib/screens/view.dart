@@ -30,7 +30,8 @@ class UserListWidget extends StatefulWidget {
 
 
 class _UserListWidgetState extends State<UserListWidget>{
-  List<User> _users = [];
+  List<User> _users;
+  String _error;
 
   void _loadDataFromServer() async {
     var request = new http.MultipartRequest("POST", Uri.parse(ResultScreen.API_URL));
@@ -41,11 +42,23 @@ class _UserListWidgetState extends State<UserListWidget>{
           //print(body);
           setState(() {
             _users = [];
-            var data = jsonDecode(body);
-            for (var row in data) {
-              User user = new User(row['name'], row['lastName'], row['email'], row['sex'], row['birthday'], row['created_at'], row['photo']);
-              this._users.add(user);
+            _error = null;
+            try{
+              var data = jsonDecode(body);
+              for (var row in data) {
+                User user = new User(row['name'], row['lastName'], row['email'], row['sex'], row['birthday'], row['created_at'], row['photo']);
+                this._users.add(user);
+              }
+            } on Exception catch(e){
+              _users = [];
+              _error = "${e}";
             }
+
+          });
+        }else{
+          setState(() {
+            _users = [];
+            _error = "Error: ${response.statusCode}: ${body}";
           });
         }
       });
@@ -53,14 +66,10 @@ class _UserListWidgetState extends State<UserListWidget>{
   }
 
   Widget _buildUserList() {
-    if (_users.length > 0 ){
-      return ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemCount: (_users == null)? 0 : _users.length,
-          itemBuilder: /*1*/ (context, i) {
-            return CustomUserItem(_users[i]);
-          });
-    }else{
+   print(_users);
+   print(_error);
+
+    if (_users == null){
       return Container(
         child: Center(
           child:
@@ -74,6 +83,26 @@ class _UserListWidgetState extends State<UserListWidget>{
           )]
         )
       ),);
+    } else if (_users.length > 0 ){
+      return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: (_users == null)? 0 : _users.length,
+        itemBuilder: /*1*/ (context, i) {
+        return CustomUserItem(_users[i]);
+      });
+
+    } else {
+      String msg = "List of users is empty";
+      if (_error != null){
+        msg = "Error: ${_error}";
+      }
+      return Container(
+          child: Center(
+              child:
+              Text(msg)
+          )
+      );
+
     }
   }
 
