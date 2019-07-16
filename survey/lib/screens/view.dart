@@ -65,9 +65,14 @@ class _UserListWidgetState extends State<UserListWidget>{
     });
   }
 
+
+  TextStyle bold24Roboto = TextStyle(
+    color: Colors.red,
+    fontSize: 24.0,
+    fontWeight: FontWeight.w900,
+  );
+
   Widget _buildUserList() {
-   print(_users);
-   print(_error);
 
     if (_users == null){
       return Container(
@@ -75,7 +80,7 @@ class _UserListWidgetState extends State<UserListWidget>{
           child:
         Column(
           children: <Widget>[
-          Text("Load data from server. Wait please..."),
+          Text("Load data from server. Wait please...", style: bold24Roboto),
           CircularProgressIndicator(
           valueColor: new AlwaysStoppedAnimation<Color>(
               Colors.green),
@@ -99,8 +104,8 @@ class _UserListWidgetState extends State<UserListWidget>{
       return Container(
           child: Center(
               child:
-              Text(msg)
-          )
+              Text(msg,style: bold24Roboto)
+          ),
       );
 
     }
