@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mychat1/screens/users.dart';
 import 'package:mychat1/modules/auth.dart';
-import 'package:mychat1/screens/users.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mychat1/examples/signis_page.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mychat1/modules/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mychat1/modules/style.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -45,9 +43,9 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
 
-  static bool isLoading = false;
-
-
+  List<User> _users;
+  String _error;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +60,11 @@ class MainPageState extends State<MainPage> {
     }else{
       appbar = AppBar(
 
-        title: Text("Users"),
+        title: Text(widget._title),
         actions: <Widget>[
           Builder(builder: (BuildContext context) {
             return FlatButton(
-              child: Text("Sign out(${Auth.currentUser.nicname})"),
+              child: Text("Sign out(${Auth.currentUser.nickname})"),
               textColor: Theme.of(context).buttonColor,
               onPressed: () async {
                 Auth.handleSignOut().whenComplete((){
@@ -94,27 +92,112 @@ class MainPageState extends State<MainPage> {
     super.initState();
   }
 
-  Widget _buildPage(){
-     if (Auth.currentUser == null){
-       return ListView(
-         padding: const EdgeInsets.all(8.0),
-         children: <Widget>[
-           _EmailPasswordForm(),
-           Center(child: Text("OR")),
-           _GoogleSignInSection()
-         ],
-       );
-     }else{
-       return Center(
 
-         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           children: <Widget>[
-             Text("User's list"),
-           ],
-         ),
-       );
-     }
+  _saveCurrUserOnServer () async{
+    final QuerySnapshot result = await Firestore.instance.collection('users').where('id', isEqualTo: Auth.currentUser.uid).getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    if (documents.length == 0) {
+      // Update data to server if new user
+      Firestore.instance.collection('users')
+          .document(Auth.currentUser.uid)
+          .setData({
+        'nickname': Auth.currentUser.nickname,
+        'photoUrl': Auth.currentUser.photoUrl,
+        'id': Auth.currentUser.uid,
+        'createdAt': DateTime.now(),
+        'updatedAt': DateTime.now(),
+        'chattingWith': null,
+        'email': Auth.currentUser.email
+      });
+    }else{
+      Firestore.instance.collection('users')
+          .document(Auth.currentUser.uid)
+          .updateData({
+        'updatedAt': DateTime.now()
+      });
+    }
+  }
+
+  _getUsersFromServer () async{
+    _users = [];
+    try{
+      final QuerySnapshot result = await Firestore.instance.collection('users').getDocuments();
+      final List<DocumentSnapshot> documents = result.documents;
+      for (var document in documents) {
+        print(Auth.currentUser.uid);
+        print(document['id']);
+        if (document['id'] == Auth.currentUser.uid)
+           continue;
+        print(document['createdAt']);
+        _users.add(User(document['nickname'], document['id'], document['email'], document['aboutMe'], document['photoUrl']));
+      }
+    }on Exception catch (e){
+      _error = e.toString();
+    }
+    setState(() {
+
+    });
+  }
+
+  Widget _buildPage () {
+    if (Auth.currentUser != null){
+      if(_users == null){
+        _getUsersFromServer();
+        //show preloader
+        return _preloader();
+      }else if(_users.length > 0){
+        //show user's list
+        return ListView.separated(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: (_users == null)? 0 : _users.length,
+            itemBuilder: /*1*/ (context, i) {
+              return CustomUserItem(_users[i]);
+            },
+            separatorBuilder: (BuildContext context, int index) => const Divider());
+      }else if (_error != null){
+         return _showError(_error);
+      }else{
+        return Container(
+            child: Center(
+                child:
+                Text("List of users is empty", style: bold24Roboto)
+            )
+        );
+      }
+
+    }else{
+      //show login form
+      return ListView(
+        padding: const EdgeInsets.all(8.0),
+        children: <Widget>[
+          _EmailPasswordForm(),
+          Center(child: Text("OR")),
+          _GoogleSignInSection()
+        ],
+      );
+    }
+  }
+
+
+  Widget _preloader(){
+    return Container(
+      child: Center(
+          child:
+              CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>(
+                    Colors.orange),
+              )
+        )
+      );
+  }
+
+  Widget _showError(msg){
+    return Container(
+      child: Center(
+          child:
+              Text(msg, style: bold24Roboto)
+              )
+        );
   }
 
   Widget _EmailPasswordForm(){
@@ -160,7 +243,8 @@ class MainPageState extends State<MainPage> {
                   Auth.signInWithEmailAndPassword(_emailController.text, _passwordController.text).then((user){
                     print('logied with email/pass');
                     setState(() {
-
+                      _saveCurrUserOnServer ();
+                      _getUsersFromServer();
                     });
                   });
                 }
@@ -184,7 +268,8 @@ class MainPageState extends State<MainPage> {
                 Auth.signInGoogle().then((user){
                   print('logied with google');
                   setState(() {
-
+                    _saveCurrUserOnServer ();
+                    _getUsersFromServer();
                   });
                 });
               },

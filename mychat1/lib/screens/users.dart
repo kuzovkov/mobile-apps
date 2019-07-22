@@ -17,7 +17,7 @@ class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
     if (Auth.currentUser != null)
-      nicname = Auth.currentUser.nicname ?? Auth.currentUser.email;
+      nicname = Auth.currentUser.nickname ?? Auth.currentUser.email;
     return Scaffold(
       appBar: AppBar(
 

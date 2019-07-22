@@ -17,16 +17,26 @@ class Auth extends Object{
       idToken: googleAuth.idToken,
     );
 
-    final FirebaseUser user = await _auth.signInWithCredential(credential);
-    print("signed in " + user.displayName);
-    currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
-    return user;
+    try{
+      final FirebaseUser user = await _auth.signInWithCredential(credential);
+      print("signed in " + user.displayName);
+      currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
+      return user;
+    }catch(e){
+       Fluttertoast.showToast(msg: "Authentication error: ${e.toString()}");
+    }
+
   }
 
   static Future<FirebaseUser> signInWithEmailAndPassword(email, password) async {
-    final FirebaseUser user = await _auth.signInWithEmailAndPassword(email: email, password: password);
-    currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
-    return user;
+    try{
+      final FirebaseUser user = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
+      return user;
+    }catch(e){
+       Fluttertoast.showToast(msg: "Authentication error: ${e.toString()}");
+    }
+
   }
 
   static Future<Null> handleSignOut() async {
