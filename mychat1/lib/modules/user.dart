@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mychat1/modules/style.dart';
 import 'package:mychat1/screens/chat.dart';
+import 'package:mychat1/screens/chat2.dart';
 
 class User extends Object{
   String nickname;
@@ -26,15 +27,9 @@ class User extends Object{
     return "${datetime.year}/${datetime.month}/${datetime.day}";
   }
 
-}
-
-
-class CustomUserItem extends StatelessWidget {
-
-  CustomUserItem(User user){
-    this.user = user;
-    this.photo = Material(
-      child: user.photoUrl != null
+  Widget getUserAvatar(){
+    return  Material(
+      child: this.photoUrl != null
           ? CachedNetworkImage(
         placeholder: (context, url) => Container(
           child: CircularProgressIndicator(
@@ -45,7 +40,7 @@ class CustomUserItem extends StatelessWidget {
           height: 50.0,
           padding: EdgeInsets.all(15.0),
         ),
-        imageUrl: user.photoUrl,
+        imageUrl: this.photoUrl,
         width: 50.0,
         height: 50.0,
         fit: BoxFit.cover,
@@ -58,6 +53,16 @@ class CustomUserItem extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(25.0)),
       clipBehavior: Clip.hardEdge,
     );
+  }
+
+}
+
+
+class CustomUserItem extends StatelessWidget {
+
+  CustomUserItem(User user){
+    this.user = user;
+    this.photo = user.getUserAvatar();
   }
 
   User user;
@@ -96,7 +101,8 @@ class CustomUserItem extends StatelessWidget {
       ),
     ), onTap: (){
       print(this.user.uid);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(responseUser: this.user)));
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(responseUser: this.user)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage2(responseUser: this.user)));
     },
     );
   }

@@ -47,11 +47,11 @@ class ChatPageState extends State<ChatPage> {
     }else{
       appbar = AppBar(
 
-        title: Text(widget._title),
+        title: Text(widget.responseUser.nickname),
         actions: <Widget>[
           Builder(builder: (BuildContext context) {
             return FlatButton(
-              child: Text("Sign out(${Auth.currentUser.nickname})"),
+              child: Icon(Icons.exit_to_app, color: Colors.white, size: 30),
               textColor: Theme.of(context).buttonColor,
               onPressed: () async {
                 Auth.handleSignOut().whenComplete((){
@@ -65,7 +65,6 @@ class ChatPageState extends State<ChatPage> {
         ],
       );
     }
-
 
     return Scaffold(
         appBar: appbar,
@@ -96,11 +95,24 @@ class ChatPageState extends State<ChatPage> {
     _messages = [];
     isLoading = true;
     try{
-      final QuerySnapshot result = await Firestore.instance.collection('messages').where('idFrom', ).getDocuments();
-      final List<DocumentSnapshot> documents = result.documents;
-      for (var document in documents) {
+      final QuerySnapshot resultFrom = await Firestore.instance.collection('messages')
+          .where('idFrom', isEqualTo: Auth.currentUser.uid)
+          .where('idTo', isEqualTo: widget.responseUser.uid)
+          .getDocuments();
+      final List<DocumentSnapshot> documentsFrom = resultFrom.documents;
+      final QuerySnapshot resultTo = await Firestore.instance.collection('messages')
+          .where('idFrom', isEqualTo: widget.responseUser.uid)
+          .where('idTo', isEqualTo: Auth.currentUser.uid)
+          .getDocuments();
+      final List<DocumentSnapshot> documentsTo = resultTo.documents;
+      for (var document in documentsFrom) {
         _messages.add(Message(document['content'], document['idFrom'], document['idTo'], document['type'], document['timestamp']));
       }
+      for (var document in documentsTo) {
+        _messages.add(Message(document['content'], document['idFrom'], document['idTo'], document['type'], document['timestamp']));
+      }
+      _messages.sort((a, b) => -a.createdAt.compareTo(b.createdAt));
+
     }on Exception catch (e){
       _error = e.toString();
     }

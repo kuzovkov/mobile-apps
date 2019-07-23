@@ -64,7 +64,7 @@ class MainPageState extends State<MainPage> {
         actions: <Widget>[
           Builder(builder: (BuildContext context) {
             return FlatButton(
-              child: Text("Sign out(${Auth.currentUser.nickname})"),
+              child: Icon(Icons.exit_to_app, color: Colors.white, size: 30),
               textColor: Theme.of(context).buttonColor,
               onPressed: () async {
                 Auth.handleSignOut().whenComplete((){
@@ -226,6 +226,7 @@ class MainPageState extends State<MainPage> {
           ),
           TextFormField(
             controller: _passwordController,
+            obscureText: true,
             decoration: InputDecoration(labelText: 'Password'),
             validator: (String value) {
               if (value.isEmpty) {
