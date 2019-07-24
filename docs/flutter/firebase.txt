@@ -1,0 +1,41 @@
+https://console.firebase.google.com
+
+Project ID:
+my-project-1556134545123
+
+
+244211594023-jqjlbmueqrvpmhbdivcrudvqromdm4ko.apps.googleusercontent.com
+HDp7rugjxGs5HQiszocoqBkE
+
+Web API Key:
+AIzaSyCIsYuMlRUvt3YGRH2sgmNcZLYsOM81BSQ
+
+Public-facing name:
+project-244211594023
+
+Server-key:
+AAAAONwlMyc:APA91bF3G719aSRY3MeyJDJroh6i3EMePe-uBynT2b8Td551YdEXz66TKedVZi2C3sJExSviAP8SbkvHfkqAd2AXh5EZoz0Zs6_nCy6gJ9TW4tU3E8quALIjQWuC1fUSB4NaDB122clV
+
+legacy-server-key:
+AIzaSyC1HA1mquLzCRchzYhgCS8gPxWhsLrIotc
+
+SenderId:
+244211594023
+
+---------------------------
+https://console.firebase.google.com/project/my-project-1556134545123/settings/cloudmessaging/android:ru.kuzovkov12.google_sign
+https://firebase.google.com/docs/admin/setup?authuser=0
+https://codelabs.developers.google.com/codelabs/flutter-firebase/#2
+
+https://developers.google.com/android/guides/client-auth
+
+https://console.developers.google.com/apis/credentials/consent?project=mychat-fbc3d&duration=P1D
+
+#issues
+https://github.com/flutter/flutter/issues/33393
+https://github.com/flutter/flutter/issues/25640
+
+https://github.com/flutter/plugins/blob/master/packages/firebase_auth/example/lib/signin_page.dart
+
+
+

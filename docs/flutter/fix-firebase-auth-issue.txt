@@ -1,0 +1,156 @@
+Add depedencies:
+=====================
+
+add to project_folder/android/build.gradle:
+----------------------------------------------
+dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.google.gms:google-services:4.2.0'  #<- add this line
+    }
+
+
+
+add to project_folder/android/app/build.gradle:
+----------------------------------------------
+defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.company.mychat1"
+        minSdkVersion 21  <- increase version here
+        targetSdkVersion 28
+...
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    implementation 'com.google.firebase:firebase-core:17.0.0'  #<- add this line
+}
+apply plugin: 'com.google.gms.google-services'  #<- add this line
+
+
+add to project_folder/pubspec.yaml:
+----------------------------------------
+dependencies:
+  flutter:
+    sdk: flutter
+  google_sign_in: ^4.0.4   #<- add this line
+  firebase_auth: ^0.11.1+11   #<- add this line
+
+run in project folder:
+-----------------------
+flutter pub get
+
+
+Gradle task assembleRelease failed with exit code 1:
+========================================================
+
+See more details where problem is run from : /project/folder$ 
+
+	flutter run -v
+
+
+File `google-services.json` must be in android/app folder,
+"package_name": "com.company.mychat1" must be equal to you project package name
+and structure of folders in `android/app/src/main/java` folder
+
+This version of firebase_auth will break your Android build if it or its dependencies aren't compatible with AndroidX:
+=======================================================================================================================
+read here: https://flutter.dev/docs/development/packages-and-plugins/androidx-compatibility
+and 
+migrate to AndroidX as described here:
+https://developer.android.com/jetpack/androidx/migrate 
+https://medium.com/flutter-community/building-a-chat-app-with-flutter-and-firebase-from-scratch-9eaa7f41782e
+
+Right click on `android` folder -> Flutter -> Open Android module in Android Studio. (new window)
+Refactor -> Migrate to AndroidX and do refactoring.
+-------------------------------------------------------
+After that project should build without problems.
+
+-----------------------------------------------------------
+
+Try Sign with google (here is code sample):
+-----------------------
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<FirebaseUser> _handleSignIn() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final FirebaseUser user = await _auth.signInWithCredential(credential);
+    print("signed in " + user.displayName);
+    return user;
+  }
+
+  Future<Null> handleSignOut() async {
+
+    await FirebaseAuth.instance.signOut();
+    await _googleSignIn.disconnect();
+    await _auth.signOut();
+
+  }
+
+  void _loginGoogle() {
+    print('login');
+    //Future<FirebaseUser> user = _handleSignIn();
+
+    _handleSignIn()
+        .then((FirebaseUser user){
+        print(user.email);
+        print(user.displayName);
+        print(user.photoUrl);
+        print(user.providerId);
+        print(user.uid);
+    })
+    .catchError((e) => print(e));
+
+  }
+
+  void _logout(){
+     print('logout');
+     handleSignOut();
+  }
+
+---------------------------------------------
+If we get exception like this: 
+PlatformException(sign_in_failed, com.google.android.gms.common.api.ApiException: 12500: , null)
+or
+PlatformException(sign_in_failed, com.google.android.gms.common.api.ApiException: 10: , null)
+
+read here:
+--------------
+https://github.com/flutter/flutter/issues/33393
+https://stackoverflow.com/questions/47632035/google-sign-in-error-12500
+
+
+
+check follows points:
+----------------------
+get SHA1 hash:  keytool -list -v \
+-alias androiddebugkey -keystore ~/.android/debug.keystore
+(password: android)
+and save it in farebase console as showed here: Screenshot from 2019-07-19 10-50-29.png
+https://console.firebase.google.com/project/mychat-fbc3d/settings/general/android:com.company.mychat1
+Download file `google-services.json` again and replace it in project. You may be need remove old file, then build, then add new, then build.
+
+Fill all field in https://console.developers.google.com/apis/credentials/consent?project=mychat-fbc3d&duration=P1D
+as showed here: Screenshot from 2019-07-19 11-13-15.png, Screenshot from 2019-07-19 11-13-29.png
+
+Add email in Firebase project settings as here: Screenshot from 2019-07-19 11-14-38.png
+
+Device must have installed Google Play service
+
+
+
+
+
+
+
