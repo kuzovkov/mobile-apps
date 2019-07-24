@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:mychat1/modules/user.dart';
 import 'package:mychat1/modules/style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
@@ -159,10 +160,22 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           alignment: const Alignment(0.6, 0.6),
           children: <Widget>[
             Container(child: Image.file(_images[i])),
+            Row(
+              children: <Widget>[
             GestureDetector(child: Icon(Icons.delete, size: 50.0), onTap: (){
-              _deleteImage(i); setState(() {});
-              },
+                _deleteImage(i); setState(() {});
+                },
+              ),
+            GestureDetector(child: Icon(Icons.rotate_right, size: 50.0), onTap: () async {
+              File rotatedImage = await FlutterExifRotation.rotateImage(path: _images[i].path);
+                _images.removeAt(i);
+                _images.add(rotatedImage);
+                setState(() {});
+                },
+              ),
+            ],
             )
+
       ]));
       });
 

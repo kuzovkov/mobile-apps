@@ -15,7 +15,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mychat1/screens/photo.dart';
-import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 
 
 class MessageList extends StatelessWidget {

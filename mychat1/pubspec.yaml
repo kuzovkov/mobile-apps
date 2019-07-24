@@ -32,6 +32,7 @@ dependencies:
   image_picker: 0.6.0+11
   intl: ^0.15.7
   camera:
+  flutter_exif_rotation: ^0.2.3
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,7 @@ flutter:
     - assets/img/mimi7.gif
     - assets/img/mimi8.gif
     - assets/img/mimi9.gif
+    - assets/img/btn_google_signin.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

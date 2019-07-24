@@ -46,6 +46,9 @@ class MainPageState extends State<MainPage> {
   List<User> _users;
   String _error;
   bool _isLoading = false;
+  bool showSignEmailPassForm = false;
+  bool showRegisterForm = false;
+  bool showInvitePage = true;
 
   @override
   Widget build(BuildContext context) {
@@ -167,15 +170,77 @@ class MainPageState extends State<MainPage> {
 
     }else{
       //show login form
-      return ListView(
+      return (showInvitePage) ? _invitePage() : Center(child: ListView(
         padding: const EdgeInsets.all(8.0),
         children: <Widget>[
-          _EmailPasswordForm(),
-          Center(child: Text("OR")),
-          _GoogleSignInSection()
+          (showSignEmailPassForm) ? _EmailPasswordForm() : Container(),
+          //Center(child: Text("OR"))
+          //Center(child: Text("OR")),
+          (showRegisterForm) ? _RegisterForm() : Container()
         ],
+      )
       );
     }
+  }
+
+  Widget _invitePage(){
+    return Center(
+        child: ListView(
+      children: <Widget>[
+        GestureDetector(
+          child: Row(
+            children: <Widget>[
+              Image.asset("assets/img/btn_google_signin.png"),
+            ],
+            mainAxisSize: MainAxisSize.min,
+          ),
+          onTap: () async {
+            Auth.signInGoogle().then((user){
+              print('logied with google');
+              setState(() {
+                _saveCurrUserOnServer ();
+                _isLoading = true;
+                _getUsersFromServer();
+              });
+            });
+          },
+        ),
+        GestureDetector(
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.email, size: 50.0,),
+              Text("Sign with email/password")
+            ],
+            mainAxisSize: MainAxisSize.min,
+          ),
+          onTap: (){
+            setState(() {
+              showRegisterForm = false;
+              showSignEmailPassForm = true;
+              showInvitePage = false;
+            });
+          },
+        ),
+        GestureDetector(
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.account_circle, size: 50.0,),
+              Text("Create new user")
+            ],
+            mainAxisSize: MainAxisSize.min,
+          ),
+          onTap: (){
+            setState(() {
+              showRegisterForm = true;
+              showSignEmailPassForm = false;
+              showInvitePage = false;
+            });
+          },
+        ),
+      ],
+      )
+    );
+
   }
 
 
@@ -204,7 +269,7 @@ class MainPageState extends State<MainPage> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _emailController = TextEditingController();
     final TextEditingController _passwordController = TextEditingController();
-    return Form(
+    return Center(child: Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,7 +306,7 @@ class MainPageState extends State<MainPage> {
             child: RaisedButton(
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  Auth.signInWithEmailAndPassword(_emailController.text, _passwordController.text).then((user){
+                  Auth.signInWithEmailAndPassword(_emailController.text.trim(), _passwordController.text.trim()).then((user){
                     print('logied with email/pass');
                     setState(() {
                       _saveCurrUserOnServer ();
@@ -254,34 +319,104 @@ class MainPageState extends State<MainPage> {
               child: const Text('Sign in'),
             ),
           ),
+          GestureDetector(
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.arrow_back, size: 50.0,),
+                Text("Back")
+              ],
+              mainAxisSize: MainAxisSize.min,
+            ),
+            onTap: (){
+              setState(() {
+                showRegisterForm = false;
+                showSignEmailPassForm = false;
+                showInvitePage = true;
+              });
+            },
+          ),
+        ],
+      ),
+    ));
+  }
+
+
+  Widget _RegisterForm(){
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final TextEditingController _emailController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            child: const Text('Create new user:'),
+            padding: const EdgeInsets.all(16),
+            alignment: Alignment.center,
+          ),
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(labelText: 'Email'),
+            validator: (String value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: _passwordController,
+            obscureText: true,
+            decoration: InputDecoration(labelText: 'Password'),
+            validator: (String value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            alignment: Alignment.center,
+            child: RaisedButton(
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  Auth.createUserWithEmailPassword(_emailController.text.trim(), _passwordController.text.trim()).then((user){
+                    print('creating new with email/pass');
+                    print(user);
+                    setState(() {
+                      _saveCurrUserOnServer ();
+                      _isLoading = true;
+                      _getUsersFromServer();
+                    });
+                  });
+                }
+              },
+              child: const Text('Create user'),
+            ),
+          ),
+          GestureDetector(
+            child: Row(
+              children: <Widget>[
+                Icon(Icons.arrow_back, size: 50.0,),
+                Text("Back")
+              ],
+              mainAxisSize: MainAxisSize.min,
+            ),
+            onTap: (){
+              setState(() {
+                showRegisterForm = false;
+                showSignEmailPassForm = false;
+                showInvitePage = true;
+              });
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _GoogleSignInSection(){
-    return Column(
-      children: <Widget>[
-        Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            alignment: Alignment.center,
-            child: RaisedButton(
-              onPressed: () async {
-                Auth.signInGoogle().then((user){
-                  print('logied with google');
-                  setState(() {
-                    _saveCurrUserOnServer ();
-                    _isLoading = true;
-                    _getUsersFromServer();
-                  });
-                });
-              },
-              child: Text("Sign in with Google"),
-            )
-        ),
-      ],
-    );
-  }
 
 }
 

@@ -36,8 +36,19 @@ class Auth extends Object{
     }catch(e){
        Fluttertoast.showToast(msg: "Authentication error: ${e.toString()}");
     }
-
   }
+
+  static Future<FirebaseUser> createUserWithEmailPassword(String email, String password) async{
+    try {
+      final FirebaseUser user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
+      return user;
+    }catch(e){
+      print(e.toString());
+      Fluttertoast.showToast(msg: "Registration error: ${e.toString()}");
+    }
+  }
+
 
   static Future<Null> handleSignOut() async {
     await FirebaseAuth.instance.signOut().whenComplete(
