@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mychat1/modules/style.dart';
 import 'package:mychat1/screens/chat.dart';
-import 'package:mychat1/screens/chat2.dart';
 
 class User extends Object{
   String nickname;
@@ -101,8 +100,7 @@ class CustomUserItem extends StatelessWidget {
       ),
     ), onTap: (){
       print(this.user.uid);
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(responseUser: this.user)));
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage2(responseUser: this.user)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(responseUser: this.user)));
     },
     );
   }

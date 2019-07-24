@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:mychat1/modules/style.dart';
-import 'package:mychat1/screens/chat.dart';
-import 'package:mychat1/modules/user.dart';
-
 class Message extends Object{
   String content;
   String idFrom;

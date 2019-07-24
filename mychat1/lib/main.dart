@@ -135,7 +135,7 @@ class MainPageState extends State<MainPage> {
       _error = e.toString();
     }
     setState(() {
-
+      _isLoading = false;
     });
   }
 
@@ -157,7 +157,7 @@ class MainPageState extends State<MainPage> {
       }else if (_error != null){
          return _showError(_error);
       }else{
-        return Container(
+        return _isLoading ? _preloader() : Container(
             child: Center(
                 child:
                 Text("List of users is empty", style: bold24Roboto)
@@ -245,6 +245,7 @@ class MainPageState extends State<MainPage> {
                     print('logied with email/pass');
                     setState(() {
                       _saveCurrUserOnServer ();
+                      _isLoading = true;
                       _getUsersFromServer();
                     });
                   });
@@ -270,6 +271,7 @@ class MainPageState extends State<MainPage> {
                   print('logied with google');
                   setState(() {
                     _saveCurrUserOnServer ();
+                    _isLoading = true;
                     _getUsersFromServer();
                   });
                 });

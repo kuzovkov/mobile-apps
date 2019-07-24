@@ -7,9 +7,9 @@ TextStyle bold24Roboto = TextStyle(
 );
 
 TextStyle dateStyle = TextStyle(
-  color: Colors.black,
+  color: Colors.black54,
   fontSize: 12.0,
-  fontWeight: FontWeight.w100,
+  fontWeight: FontWeight.w500,
 );
 
 final themeColor = Color(0xfff5a623);
