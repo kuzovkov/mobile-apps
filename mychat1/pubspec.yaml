@@ -31,10 +31,12 @@ dependencies:
   cupertino_icons: ^0.1.2
   image_picker: 0.6.0+11
   intl: ^0.15.7
-  camera:
+  camera: ^0.5.2+2
   flutter_exif_rotation: ^0.2.3
   image_picker_saver: ^0.3.0
   http:
+  firebase_messaging: 5.1.0
+  flutter_local_notifications: ^0.8.0
 
 dev_dependencies:
   flutter_test:

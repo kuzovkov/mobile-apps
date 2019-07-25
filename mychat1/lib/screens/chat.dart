@@ -199,6 +199,12 @@ class ChatPageState extends State<ChatPage> {
   String imageUrl;
 
   @override
+  initState(){
+    super.initState();
+    Firestore.instance.collection('users').document(Auth.currentUser.uid).updateData({'chattingWith': widget.responseUser.uid});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
