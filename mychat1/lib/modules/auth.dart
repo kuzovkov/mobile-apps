@@ -20,10 +20,11 @@ class Auth extends Object{
     try{
       final FirebaseUser user = await _auth.signInWithCredential(credential);
       print("signed in " + user.displayName);
-      currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
+      setCurrentUser(user);
       return user;
     }catch(e){
-       Fluttertoast.showToast(msg: "Authentication error: ${e.toString()}");
+      print(e.toString());
+      Fluttertoast.showToast(msg: "Authentication error: ${e.toString()}");
     }
 
   }
@@ -31,17 +32,18 @@ class Auth extends Object{
   static Future<FirebaseUser> signInWithEmailAndPassword(email, password) async {
     try{
       final FirebaseUser user = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
+      setCurrentUser(user);
       return user;
     }catch(e){
-       Fluttertoast.showToast(msg: "Authentication error: ${e.toString()}");
+      print(e.toString());
+      Fluttertoast.showToast(msg: "Authentication error: ${e.toString()}");
     }
   }
 
   static Future<FirebaseUser> createUserWithEmailPassword(String email, String password) async{
     try {
       final FirebaseUser user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl);
+      setCurrentUser(user);
       return user;
     }catch(e){
       print(e.toString());
@@ -58,6 +60,11 @@ class Auth extends Object{
     await _auth.signOut().whenComplete(
         (){}
     );
+  }
+
+  static setCurrentUser(FirebaseUser user){
+    DateTime createdAt = DateTime.fromMillisecondsSinceEpoch(user.metadata.creationTimestamp);
+    currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl, createdAt, DateTime.now());
   }
 
 

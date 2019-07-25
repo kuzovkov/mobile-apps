@@ -9,13 +9,49 @@ class User extends Object{
   String aboutMe;
   String photoUrl;
   String email;
+  DateTime createdAt;
+  DateTime updatedAt;
 
-  User(@required nickname, @required uid,  @required email, aboutMe, photoUrl){
+  User(@required nickname, @required uid,  @required email, aboutMe, photoUrl, createdAt, updatedAt){
     this.nickname = nickname ?? email;
     this.uid = uid;
     this.email = email;
     this.aboutMe = aboutMe;
     this.photoUrl = photoUrl;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  User.fromDocument(@required document){
+    this.nickname = document['nickname'] ?? document['email'];
+    this.uid = document['id'];
+    this.email = document['email'];
+    this.aboutMe = document['aboutMe'];
+    this.photoUrl = document['photoUrl'];
+    if (document['createdAt'] == null){
+      this.createdAt = DateTime.now();
+    }else if (document['createdAt'] is DateTime){
+       this.createdAt = document['createdAt'];
+    }else if (document['createdAt'] is int){
+      if (document['createdAt'] < DateTime.now().millisecond)
+        document['createdAt'] *= 1000;
+      this.createdAt = DateTime.fromMillisecondsSinceEpoch(document['createdAt']);
+    }else{
+      this.createdAt = document['createdAt'].toDate();
+    }
+    if (document['updatedAt'] == null){
+      this.updatedAt = DateTime.now();
+    }else if (document['updatedAt'] is DateTime){
+      this.updatedAt = document['updatedAt'];
+    }else if (document['updatedAt'] is int){
+      if (document['updatedAt'] < DateTime.now().millisecond)
+        document['updatedAt'] *= 1000;
+      this.updatedAt = DateTime.fromMillisecondsSinceEpoch(document['updatedAt']);
+    }else{
+      this.updatedAt = document['updatedAt'].toDate();
+    }
+    
+    
   }
 
   static String datetime2string(DateTime datetime){
@@ -24,6 +60,19 @@ class User extends Object{
     else if (datetime is String)
       return datetime.toString();
     return "${datetime.year}/${datetime.month}/${datetime.day}";
+  }
+
+  String getLastSeen(){
+    DateTime now = DateTime.now();
+    List<String> monthes = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    if (this.updatedAt.year != now.year && this.updatedAt.month != now.month && this.updatedAt.day != now.day)
+      return "Last seen: ${this.updatedAt.day}.${this.updatedAt.month}.${this.updatedAt.year} ${this.updatedAt.hour}:${this.updatedAt.minute}";
+    if (this.updatedAt.year == now.year && this.updatedAt.month != now.month && this.updatedAt.day != now.day)
+      return "Last seen: ${this.updatedAt.day}.${this.updatedAt.month} ${this.updatedAt.hour}:${this.updatedAt.minute}";
+    if (this.updatedAt.year == now.year && this.updatedAt.month == now.month && this.updatedAt.day != now.day)
+      return "Last seen: ${this.updatedAt.day} of ${monthes[this.updatedAt.month - 1]} ${this.updatedAt.hour}:${this.updatedAt.minute}";
+    if (this.updatedAt.year == now.year && this.updatedAt.month == now.month && this.updatedAt.day == now.day)
+      return "Last seen: today ${this.updatedAt.hour}:${this.updatedAt.minute}";
   }
 
   Widget getUserAvatar(){
@@ -113,6 +162,7 @@ class _UserDescription extends StatelessWidget {
     this.aboutMe = user.aboutMe ?? '';
     this.uid = user.uid;
     this.photoUrl = user.photoUrl;
+    this.lastSeen = user.getLastSeen();
   }
 
   String name;
@@ -120,6 +170,7 @@ class _UserDescription extends StatelessWidget {
   String email;
   String uid;
   String photoUrl;
+  String lastSeen;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +194,11 @@ class _UserDescription extends StatelessWidget {
           const Padding(padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 20)),
           Text(
             aboutMe,
+            style: const TextStyle(fontSize: 10.0),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 20)),
+          Text(
+            lastSeen,
             style: const TextStyle(fontSize: 10.0),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 1.0, horizontal: 20)),

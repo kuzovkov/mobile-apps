@@ -97,6 +97,8 @@ class MainPageState extends State<MainPage> {
 
 
   _saveCurrUserOnServer () async{
+    if (Auth.currentUser == null)
+      return null;
     final QuerySnapshot result = await Firestore.instance.collection('users').where('id', isEqualTo: Auth.currentUser.uid).getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     if (documents.length == 0) {
@@ -122,6 +124,8 @@ class MainPageState extends State<MainPage> {
   }
 
   _getUsersFromServer () async{
+    if (Auth.currentUser == null)
+      return null;
     _users = [];
     try{
       final QuerySnapshot result = await Firestore.instance.collection('users').getDocuments();
@@ -132,7 +136,7 @@ class MainPageState extends State<MainPage> {
         if (document['id'] == Auth.currentUser.uid)
            continue;
         print(document['createdAt']);
-        _users.add(User(document['nickname'], document['id'], document['email'], document['aboutMe'], document['photoUrl']));
+        _users.add(User.fromDocument(document));
       }
     }on Exception catch (e){
       _error = e.toString();

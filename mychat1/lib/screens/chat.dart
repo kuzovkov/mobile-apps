@@ -15,7 +15,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mychat1/screens/photo.dart';
-
+import 'package:mychat1/screens/view.dart';
 
 class MessageList extends StatelessWidget {
   final Firestore firestore;
@@ -51,7 +51,7 @@ class MessageList extends StatelessWidget {
               listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
             }catch(e){print(e);};
 
-            return _buildItem(document);
+            return _buildItem(document, context);
           },
             separatorBuilder: (BuildContext context, int index) => const Divider(),
           controller: listScrollController,
@@ -121,7 +121,7 @@ class MessageList extends StatelessWidget {
   }
 
 
-  Widget _buildItem(document){
+  Widget _buildItem(document, context){
     var msg;
     if (document['type'] == 0)
       msg = Container( child: Text(document['content'] ?? '<No message retrieved>'), width: 150);
@@ -149,6 +149,14 @@ class MessageList extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
     );
+    if (document['type'] == 1){
+      msg = GestureDetector(
+        child: msg,
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewScreen(imageUrl: document['content'])));
+        },
+      );
+    }
     double leftmargin = document['idFrom'] == Auth.currentUser.uid ? 100.0 : 0;
     return Container(
       child: Row(
