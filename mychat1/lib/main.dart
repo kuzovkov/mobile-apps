@@ -189,12 +189,16 @@ class MainPageState extends State<MainPage> {
 
   Widget _invitePage(){
     return Center(
-        child: ListView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         GestureDetector(
           child: Row(
             children: <Widget>[
-              Image.asset("assets/img/btn_google_signin.png"),
+              Image.asset("assets/img/google3.png", width: 40.0, height: 40.0,),
+              Container(padding: EdgeInsets.all(10.0)),
+              Text("Sign with Google")
             ],
             mainAxisSize: MainAxisSize.min,
           ),
@@ -213,6 +217,7 @@ class MainPageState extends State<MainPage> {
           child: Row(
             children: <Widget>[
               Icon(Icons.email, size: 50.0,),
+              Container(padding: EdgeInsets.all(8.0)),
               Text("Sign with email/password")
             ],
             mainAxisSize: MainAxisSize.min,
@@ -228,7 +233,9 @@ class MainPageState extends State<MainPage> {
         GestureDetector(
           child: Row(
             children: <Widget>[
-              Icon(Icons.account_circle, size: 50.0,),
+              Icon(Icons.add, size: 50.0,),
+              Icon(Icons.account_circle, size: 30.0,),
+              Container(padding: EdgeInsets.all(10.0)),
               Text("Create new user")
             ],
             mainAxisSize: MainAxisSize.min,
