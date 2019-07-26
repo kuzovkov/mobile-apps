@@ -2,6 +2,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mychat1/modules/user.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mychat1/modules/notification.dart';
 
 class Auth extends Object{
   static GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -65,9 +66,9 @@ class Auth extends Object{
   static setCurrentUser(FirebaseUser user){
     DateTime createdAt = DateTime.fromMillisecondsSinceEpoch(user.metadata.creationTimestamp);
     currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl, createdAt, DateTime.now());
+    Notification.registerNotification();
+    Notification.configLocalNotification();
   }
-
-
 }
 
 
