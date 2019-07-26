@@ -11,7 +11,7 @@ const admin = require('firebase-admin')
 admin.initializeApp()
 
 exports.sendNotification = functions.firestore
-  .document('messages/{groupId1}/{groupId2}/{message}')
+  .document('messages/{message}')
   .onCreate((snap, context) => {
     console.log('----------------start function--------------------')
 
@@ -20,7 +20,8 @@ exports.sendNotification = functions.firestore
 
     const idFrom = doc.idFrom
     const idTo = doc.idTo
-    const contentMessage = doc.content
+    const type = doc.type
+    const contentMessage = (type == 0)? doc.content : 'image'
 
     // Get push token user to (receive)
     admin
