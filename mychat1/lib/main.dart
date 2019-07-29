@@ -49,6 +49,8 @@ class MainPageState extends State<MainPage> {
   bool showSignEmailPassForm = false;
   bool showRegisterForm = false;
   bool showInvitePage = true;
+  final Firestore firestore = Firestore.instance;
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +89,9 @@ class MainPageState extends State<MainPage> {
 
     return Scaffold(
         appBar: appbar,
-        body: _buildPage());
+        body:
+          _buildPage()
+       );
   }
 
   @override
@@ -154,6 +158,8 @@ class MainPageState extends State<MainPage> {
         return _preloader();
       }else if(_users.length > 0){
         //show user's list
+        return _buildUserList();
+        /*
         return ListView.separated(
             padding: const EdgeInsets.all(16.0),
             itemCount: (_users == null)? 0 : _users.length,
@@ -161,6 +167,7 @@ class MainPageState extends State<MainPage> {
               return CustomUserItem(_users[i]);
             },
             separatorBuilder: (BuildContext context, int index) => const Divider());
+            */
       }else if (_error != null){
          return _showError(_error);
       }else{
@@ -185,6 +192,42 @@ class MainPageState extends State<MainPage> {
       )
       );
     }
+  }
+
+  Widget _buildUserList(){
+    return
+      Flex(
+        children: <Widget>[
+            Flexible(
+              child:
+                StreamBuilder<QuerySnapshot>(
+                  stream: firestore.collection('users').snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) return Center(
+                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)));
+                final int userCount = snapshot.data.documents.length;
+                  return ListView.separated(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: userCount,
+                itemBuilder: (_, int index) {
+                final DocumentSnapshot document = snapshot.data.documents[index];
+                if (document['id'] == Auth.currentUser.uid)
+                  return Container();
+                User user = User.fromDocument(document);
+                  return CustomUserItem(user);
+                },
+                separatorBuilder: (BuildContext context, int index){
+                  DocumentSnapshot document = snapshot.data.documents[index];
+                  return (document['id'] != Auth.currentUser.uid)? Divider() : Container();
+                },
+              );
+            },
+            )
+          )
+        ],
+        direction: Axis.vertical,
+      );
+
   }
 
   Widget _invitePage(){
