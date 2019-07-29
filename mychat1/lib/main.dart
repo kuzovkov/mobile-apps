@@ -3,6 +3,7 @@ import 'package:mychat1/modules/auth.dart';
 import 'package:mychat1/modules/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mychat1/modules/style.dart';
+import 'package:mychat1/modules/menu.dart';
 
 
 void main() => runApp(MyApp());
@@ -66,6 +67,7 @@ class MainPageState extends State<MainPage> {
       appbar = AppBar(
 
         title: Text(widget._title),
+        /*
         actions: <Widget>[
           Builder(builder: (BuildContext context) {
             return FlatButton(
@@ -82,16 +84,18 @@ class MainPageState extends State<MainPage> {
               },
             );
           })
-        ],
+        ],*/
       );
     }
 
 
-    return Scaffold(
+    return (Auth.currentUser != null) ? Scaffold(
         appBar: appbar,
-        body:
-          _buildPage()
-       );
+        body: _buildPage(),
+      drawer: Menu.getNavDrawer(context, this),
+       ) : Scaffold(
+        appBar: appbar,
+        body: _buildPage());
   }
 
   @override
@@ -159,15 +163,6 @@ class MainPageState extends State<MainPage> {
       }else if(_users.length > 0){
         //show user's list
         return _buildUserList();
-        /*
-        return ListView.separated(
-            padding: const EdgeInsets.all(16.0),
-            itemCount: (_users == null)? 0 : _users.length,
-            itemBuilder: /*1*/ (context, i) {
-              return CustomUserItem(_users[i]);
-            },
-            separatorBuilder: (BuildContext context, int index) => const Divider());
-            */
       }else if (_error != null){
          return _showError(_error);
       }else{
