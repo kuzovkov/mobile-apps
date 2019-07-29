@@ -4,6 +4,8 @@ import 'package:mychat1/modules/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mychat1/modules/style.dart';
 import 'package:mychat1/modules/menu.dart';
+import 'package:mychat1/modules/mylocation.dart';
+import 'package:location/location.dart';
 
 
 void main() => runApp(MyApp());
@@ -56,45 +58,12 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
 
-    AppBar appbar;
-
-    if (Auth.currentUser == null){
-      appbar = AppBar(
-
-        title: Text(widget._title),
-      );
-    }else{
-      appbar = AppBar(
-
-        title: Text(widget._title),
-        /*
-        actions: <Widget>[
-          Builder(builder: (BuildContext context) {
-            return FlatButton(
-              child: Icon(Icons.exit_to_app, color: Colors.white, size: 30),
-              textColor: Theme.of(context).buttonColor,
-              onPressed: () async {
-                Auth.handleSignOut().whenComplete((){
-                  print('here users logout');
-                  print(Auth.currentUser);
-                  setState(() {
-
-                  });
-                });
-              },
-            );
-          })
-        ],*/
-      );
-    }
-
-
     return (Auth.currentUser != null) ? Scaffold(
-        appBar: appbar,
+        appBar: AppBar(title: Text(widget._title)),
         body: _buildPage(),
       drawer: Menu.getNavDrawer(context, this),
        ) : Scaffold(
-        appBar: appbar,
+        appBar: AppBar(title: Text(widget._title)),
         body: _buildPage());
   }
 
@@ -109,6 +78,7 @@ class MainPageState extends State<MainPage> {
       return null;
     final QuerySnapshot result = await Firestore.instance.collection('users').where('id', isEqualTo: Auth.currentUser.uid).getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
+    LocationData location = await MyLocation.getCurrentLocation();
     if (documents.length == 0) {
       // Update data to server if new user
       Firestore.instance.collection('users')
@@ -120,13 +90,15 @@ class MainPageState extends State<MainPage> {
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
         'chattingWith': null,
-        'email': Auth.currentUser.email
+        'email': Auth.currentUser.email,
+        'location': {'lat': location.latitude, 'lng': location.latitude}
       });
     }else{
       Firestore.instance.collection('users')
           .document(Auth.currentUser.uid)
           .updateData({
-        'updatedAt': DateTime.now()
+        'updatedAt': DateTime.now(),
+        'location': {'lat': location.latitude, 'lng': location.longitude}
       });
     }
   }
@@ -141,8 +113,6 @@ class MainPageState extends State<MainPage> {
       for (var document in documents) {
         print(Auth.currentUser.uid);
         print(document['id']);
-        if (document['id'] == Auth.currentUser.uid)
-           continue;
         print(document['createdAt']);
         _users.add(User.fromDocument(document));
       }

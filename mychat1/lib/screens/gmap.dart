@@ -22,20 +22,17 @@ class GMapSampleState extends State<GMapSample> {
 
   @override
   void initState() {
-    _createMarker();
+    _createMarker(widget.currentLocation.latitude, widget.currentLocation.longitude);
     super.initState();
   }
 
-  _createMarker(){
+  _createMarker(double lat, double lng){
     // creating a new MARKER
     if (Auth.currentUser != null && widget.currentLocation != null){
       final MarkerId markerId = MarkerId(Auth.currentUser.uid);
       final Marker marker = Marker(
         markerId: markerId,
-        position: LatLng(
-            widget.currentLocation.latitude,
-            widget.currentLocation.longitude
-        ),
+        position: LatLng(lat, lng),
         infoWindow: InfoWindow(title: Auth.currentUser.nickname, snippet: Auth.currentUser.getLastSeen()),
         onTap: () {
           print(markerId);

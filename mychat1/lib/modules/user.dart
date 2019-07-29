@@ -11,8 +11,9 @@ class User extends Object{
   String email;
   DateTime createdAt;
   DateTime updatedAt;
+  Map<String, double> location;
 
-  User(@required nickname, @required uid,  @required email, aboutMe, photoUrl, createdAt, updatedAt){
+  User(@required nickname, @required uid,  @required email, aboutMe, photoUrl, createdAt, updatedAt, location){
     this.nickname = nickname ?? email;
     this.uid = uid;
     this.email = email;
@@ -20,6 +21,7 @@ class User extends Object{
     this.photoUrl = photoUrl;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.location = location;
   }
 
   User.fromDocument(@required document){
@@ -50,8 +52,8 @@ class User extends Object{
     }else{
       this.updatedAt = document['updatedAt'].toDate();
     }
-    
-    
+    if (location != null)
+      this.location = {'lat': document['location']['lat'], 'lng': document['location']['lng']};
   }
 
   static String datetime2string(DateTime datetime){

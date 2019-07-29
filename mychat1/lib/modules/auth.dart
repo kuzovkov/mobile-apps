@@ -65,7 +65,7 @@ class Auth extends Object{
 
   static setCurrentUser(FirebaseUser user){
     DateTime createdAt = DateTime.fromMillisecondsSinceEpoch(user.metadata.creationTimestamp);
-    currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl, createdAt, DateTime.now());
+    currentUser = User(user.displayName, user.uid, user.email, "I'm ${user.displayName}", user.photoUrl, createdAt, DateTime.now(), null);
     Notification.registerNotification();
     Notification.configLocalNotification();
   }
