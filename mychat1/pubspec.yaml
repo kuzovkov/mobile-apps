@@ -37,6 +37,9 @@ dependencies:
   http:
   firebase_messaging: 5.1.0
   flutter_local_notifications: ^0.8.0
+  google_maps_flutter: ^0.5.19+2
+  location: ^2.3.5
+  yandex_mapkit: ^0.3.0
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +74,8 @@ flutter:
     - assets/img/mimi8.gif
     - assets/img/mimi9.gif
     - assets/img/btn_google_signin.png
+    - assets/img/user.png
+    - assets/img/place.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
