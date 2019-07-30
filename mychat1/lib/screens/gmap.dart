@@ -122,7 +122,7 @@ class GMapSampleState extends State<GMapSample> {
                   );
                 },
               )
-          )
+          ),
         ],
         direction: Axis.vertical,
       );

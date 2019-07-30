@@ -110,6 +110,16 @@ class MainPageState extends State<MainPage> {
         'location': {'lat': location.latitude, 'lng': location.longitude}
       });
     }
+    MyLocation.onChangeLocation((LocationData newLocation){
+      if (Auth.currentUser != null){
+          Firestore.instance.collection('users')
+              .document(Auth.currentUser.uid)
+              .updateData({
+          'updatedAt': DateTime.now(),
+          'location': {'lat': newLocation.latitude, 'lng': newLocation.longitude}
+          });
+      }
+    });
   }
 
   _getUsersFromServer () async{
