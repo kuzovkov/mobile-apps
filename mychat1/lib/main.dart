@@ -81,19 +81,28 @@ class MainPageState extends State<MainPage> {
     LocationData location = await MyLocation.getCurrentLocation();
     if (documents.length == 0) {
       // Update data to server if new user
-      Firestore.instance.collection('users')
-          .document(Auth.currentUser.uid)
-          .setData({
+      var data = {
         'nickname': Auth.currentUser.nickname,
         'photoUrl': Auth.currentUser.photoUrl,
         'id': Auth.currentUser.uid,
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
         'chattingWith': null,
-        'email': Auth.currentUser.email,
-        'location': {'lat': location.latitude, 'lng': location.latitude}
-      });
+        'email': Auth.currentUser.email
+      };
+      if (location != null){
+        data['location'] = {'lat': location.latitude, 'lng': location.latitude};
+      }
+      Firestore.instance.collection('users')
+          .document(Auth.currentUser.uid)
+          .setData(data);
     }else{
+      Map<String, Object> data = {
+        'updatedAt': DateTime.now()
+      };
+      if (location != null){
+        data['location'] = {'lat': location.latitude, 'lng': location.latitude};
+      }
       Firestore.instance.collection('users')
           .document(Auth.currentUser.uid)
           .updateData({
