@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mychat1/modules/auth.dart';
+import 'package:mychat1/modules/user.dart';
 import 'package:mychat1/screens/gmap.dart';
 import 'package:mychat1/screens/ymap.dart';
 import 'package:mychat1/modules/mylocation.dart';

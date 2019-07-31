@@ -52,7 +52,7 @@ class User extends Object{
     }else{
       this.updatedAt = document['updatedAt'].toDate();
     }
-    if (location != null)
+    if (document['location'] != null)
       this.location = {'lat': document['location']['lat'], 'lng': document['location']['lng']};
   }
 

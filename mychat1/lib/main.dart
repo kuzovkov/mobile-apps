@@ -46,14 +46,13 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
 
-  List<User> _users;
+  Map<String, User> users;
   String _error;
   bool _isLoading = false;
   bool showSignEmailPassForm = false;
   bool showRegisterForm = false;
   bool showInvitePage = true;
   final Firestore firestore = Firestore.instance;
-
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +124,7 @@ class MainPageState extends State<MainPage> {
   _getUsersFromServer () async{
     if (Auth.currentUser == null)
       return null;
-    _users = [];
+    users = {};
     try{
       final QuerySnapshot result = await Firestore.instance.collection('users').getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
@@ -133,7 +132,7 @@ class MainPageState extends State<MainPage> {
         print(Auth.currentUser.uid);
         print(document['id']);
         print(document['createdAt']);
-        _users.add(User.fromDocument(document));
+        users[document['id']] = User.fromDocument(document);
       }
     }on Exception catch (e){
       _error = e.toString();
@@ -145,11 +144,11 @@ class MainPageState extends State<MainPage> {
 
   Widget _buildPage () {
     if (Auth.currentUser != null){
-      if(_users == null){
+      if(users == null){
         _getUsersFromServer();
         //show preloader
         return _preloader();
-      }else if(_users.length > 0){
+      }else if(users.length > 0){
         //show user's list
         return _buildUserList();
       }else if (_error != null){
