@@ -30,8 +30,6 @@ class GMapSampleState extends State<GMapSample> {
 
   _createMarker(String id, double lat, double lng, String title, String snippet){
     // creating a new MARKER
-    print(title);
-    print(snippet);
     final MarkerId markerId = MarkerId(id);
     final Marker marker = Marker(
       markerId: markerId,
